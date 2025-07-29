@@ -20,3 +20,45 @@ path = [
 ]
 SPDX-FileCopyrightText = "Arch Linux contributors"
 SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "lib32-glibc.conf",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "locale-gen",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "locale.gen.txt",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "sdt-config.h",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "sdt.h",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "lib32-glibc.conf",
+]
+SPDX-FileCopyrightText = "ArchLinux contributors"
+SPDX-License-Identifier = "0BSD"
