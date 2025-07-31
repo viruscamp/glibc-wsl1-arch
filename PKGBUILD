@@ -75,6 +75,7 @@ build() {
         --libdir=/usr/lib \
         --libexecdir=/usr/lib \
         --enable-cet \
+        --enable-sframe \
         "${_configure_flags[@]}"
 
     make -O
