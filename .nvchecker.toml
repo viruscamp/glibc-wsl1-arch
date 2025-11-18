@@ -1,0 +1,3 @@
+[glibc]
+source = "git"
+git = "https://sourceware.org/git/glibc.git"
