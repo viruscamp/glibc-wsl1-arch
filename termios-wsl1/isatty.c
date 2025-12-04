@@ -28,3 +28,5 @@ __isatty (int fd)
   struct __kernel_termios k_termios;
   return INLINE_SYSCALL_CALL (ioctl, fd, TCGETS, &k_termios) == 0;
 }
+weak_alias (__isatty, isatty)
+
