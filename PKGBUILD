@@ -7,16 +7,16 @@
 # NOTE: valgrind requires rebuilt with each major glibc version
 
 pkgbase=glibc
-pkgname=(glibc lib32-glibc glibc-locales)
+pkgname=(glibc glibc-locales)
 pkgver=2.42+r33+gde1fe81f4714
 _commit=de1fe81f471496366580ad728b8986a3424b2fd7
 pkgrel=1
 arch=(x86_64)
 url='https://www.gnu.org/software/libc'
 license=(GPL-2.0-or-later LGPL-2.1-or-later)
-makedepends=(git gd lib32-gcc-libs python)
+makedepends=(git gd python)
 options=(staticlibs !lto)
-source=("git+https://sourceware.org/git/glibc.git#commit=${_commit}"
+source=("git+https://gitee.com/mirrors/glibc.git#commit=${_commit}"
         locale.gen.txt
         locale-gen
         lib32-glibc.conf
@@ -83,7 +83,7 @@ build() {
     # build info pages manually for reproducibility
     make info
   )
-
+if false; then
   (
     cd lib32-glibc-build
     export CC="gcc -m32 -mstackrealign"
@@ -106,7 +106,7 @@ build() {
 
     make -O
   )
-
+fi
   # pregenerate locales here instead of in package
   # functions because localedef does not like fakeroot
   make -C "${srcdir}"/glibc/localedata objdir="${srcdir}"/glibc-build \
