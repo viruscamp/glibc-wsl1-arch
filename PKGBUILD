@@ -37,7 +37,7 @@ pkgver() {
 }
 
 prepare() {
-  cp -f ../termios-wsl1/* glibc/sysdeps/unix/sysv/linux/
+  cp -fv ../termios-wsl1/* glibc/sysdeps/unix/sysv/linux/
   mkdir -p glibc-build lib32-glibc-build
 
   [[ -d glibc-$pkgver ]] && ln -s glibc-$pkgver glibc

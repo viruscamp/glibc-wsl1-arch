@@ -26,6 +26,7 @@
 /* The difference here is that the termios structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */
+#include <termios_internals.h>
 #include <kernel_termios.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
@@ -48,14 +49,14 @@ __tcgetattr (int fd, struct termios *termios_p)
 # if _HAVE_C_ISPEED
       termios_p->c_ispeed = k_termios.c_ispeed;
 # else
-      termios_p->c_ispeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
+      termios_p->c_ispeed = ___cbaud_to_speed (cibaud (k_termios.c_cflag), 0);
 # endif
 #endif
 #if _HAVE_STRUCT_TERMIOS_C_OSPEED
 # if _HAVE_C_OSPEED
       termios_p->c_ospeed = k_termios.c_ospeed;
 # else
-      termios_p->c_ospeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
+      termios_p->c_ospeed = ___cbaud_to_speed (cbaud (k_termios.c_cflag), 0);
 # endif
 #endif
       if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
