@@ -6,8 +6,8 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->glibc->binutils->gcc
 # NOTE: valgrind requires rebuilt with each major glibc version
 
-pkgbase=glibc
-pkgname=(glibc glibc-locales)
+pkgbase=glibc-wsl
+pkgname=(glibc-wsl)
 pkgver=2.42+r33+gde1fe81f4714
 _commit=de1fe81f471496366580ad728b8986a3424b2fd7
 pkgrel=1
@@ -84,6 +84,7 @@ build() {
     # build info pages manually for reproducibility
     make info
   )
+
 if false; then
   (
     cd lib32-glibc-build
@@ -108,6 +109,7 @@ if false; then
     make -O
   )
 fi
+
   # pregenerate locales here instead of in package
   # functions because localedef does not like fakeroot
   make -C "${srcdir}"/glibc/localedata objdir="${srcdir}"/glibc-build \
@@ -145,11 +147,13 @@ check() (
   make -O check
 )
 
-package_glibc() {
-  pkgdesc='GNU C Library'
+package_glibc-wsl() {
+  pkgdesc='GNU C Library for WSL1'
   depends=('linux-api-headers>=4.10' tzdata filesystem)
   optdepends=('gd: for memusagestat'
               'perl: for mtrace')
+  provides=("glibc=${pkgver%%.r*}")
+  conflicts=("glibc")
   install=glibc.install
   backup=(etc/gai.conf
           etc/locale.gen)
