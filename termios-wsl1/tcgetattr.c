@@ -29,6 +29,22 @@
 #include <termios_internals.h>
 #include <kernel_termios.h>
 
+static void
+___glibc_termios_canonicalize_speeds (struct termios *k_termios_p)
+{
+  k_termios_p->c_ospeed =
+      ___cbaud_to_speed (cbaud (k_termios_p->c_cflag),  k_termios_p->c_ospeed);
+  k_termios_p->c_ispeed =
+      ___cbaud_to_speed (cibaud (k_termios_p->c_cflag), k_termios_p->c_ispeed);
+
+  if (!k_termios_p->c_ispeed)
+    k_termios_p->c_ispeed = k_termios_p->c_ospeed;
+
+  k_termios_p->c_cflag &= ~(CBAUD | CIBAUD);
+  k_termios_p->c_cflag |= ___speed_to_cbaud (k_termios_p->c_ospeed);
+  k_termios_p->c_cflag |= ___speed_to_cbaud (k_termios_p->c_ispeed) << IBSHIFT;
+}
+
 /* Put the state of FD into *TERMIOS_P.  */
 int
 __tcgetattr (int fd, struct termios *termios_p)
@@ -45,20 +61,7 @@ __tcgetattr (int fd, struct termios *termios_p)
       termios_p->c_cflag = k_termios.c_cflag;
       termios_p->c_lflag = k_termios.c_lflag;
       termios_p->c_line = k_termios.c_line;
-#if _HAVE_STRUCT_TERMIOS_C_ISPEED
-# if _HAVE_C_ISPEED
-      termios_p->c_ispeed = k_termios.c_ispeed;
-# else
-      termios_p->c_ispeed = ___cbaud_to_speed (cibaud (k_termios.c_cflag), 0);
-# endif
-#endif
-#if _HAVE_STRUCT_TERMIOS_C_OSPEED
-# if _HAVE_C_OSPEED
-      termios_p->c_ospeed = k_termios.c_ospeed;
-# else
-      termios_p->c_ospeed = ___cbaud_to_speed (cbaud (k_termios.c_cflag), 0);
-# endif
-#endif
+      ___glibc_termios_canonicalize_speeds(termios_p);
       if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
 	  || (unsigned char) _POSIX_VDISABLE == (unsigned char) -1)
 	memset (__mempcpy (&termios_p->c_cc[0], &k_termios.c_cc[0],
