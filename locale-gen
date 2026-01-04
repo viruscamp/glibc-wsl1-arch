@@ -4,6 +4,8 @@ set -e
 
 LOCALEGEN=/etc/locale.gen
 LOCALES=/usr/share/i18n/locales
+LOCALES_OVERRIDES=/usr/local/share/i18n/locales
+
 if [ -n "$POSIXLY_CORRECT" ]; then
   unset POSIXLY_CORRECT
 fi
@@ -34,8 +36,14 @@ while read locale charset; do \
 	echo -n ".$charset"; \
 	echo -n `echo $locale | sed 's/\([^\@]*\)\(\@.*\)*/\2/'`; \
 	echo -n '...'; \
-        if [ -f $LOCALES/$locale ]; then input=$locale; else \
-        input=`echo $locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; fi; \
+	locale_base=`echo $locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
+        if [ -f $LOCALES_OVERRIDES/$locale_base ]; then \
+          input=$LOCALES_OVERRIDES/$locale_base;
+        elif [ -f $LOCALES/$locale_base ]; then \
+          input=$LOCALES/$locale_base;
+        else \
+          input=$locale_base;
+        fi; \
 	localedef -i $input -c -f $charset -A /usr/share/locale/locale.alias $locale; \
 	echo ' done'; \
 done < $LOCALEGEN
