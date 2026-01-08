@@ -37,13 +37,28 @@ workground: disable AIO in configfile
     innodb_use_native_aio=0
     ```
 
-6. **fixed** sleep: cannot read realtime clock: Invalid argument  
+6. landlock  
+Got 'error: restricting filesystem access failed because landlock is not supported by the kernel!', when using pacman.  
+https://github.com/AzureZeng/wsl-arch-rootfs/issues/2  
+affects: pacman  
+workground: Add `DisableSandbox` to '/etc/pacman.conf'  
+
+7. 'Failed to take /etc/passwd lock: Invalid argument'  
+Got 'Failed to take /etc/passwd lock: Invalid argument', when using apt or pacman.  
+Failed at `fcntl(3, F_OFD_SETLKW,..)` of `systemd-sysusers`.  
+https://github.com/microsoft/WSL/issues/10397  
+affects: apt pacman systemd  
+workgroud:  
+  - Arch: ignore it  
+  - Debian/Ubuntu: `cd /bin && mv -f systemd-sysusers{,.org} && ln -s echo systemd-sysusers`  
+
+8. **fixed** sleep: cannot read realtime clock: Invalid argument  
 https://github.com/microsoft/WSL/issues/4898  
 affects: `glibc`  
 latest working version: glibc-2.30-3  
 fix: [20H2 Build 19042.487 (KB4571744)](https://github.com/microsoft/WSL/issues/4898#issuecomment-682109141)  
 
-7. **fixed** unsupported syscall TIME64 FACCESSAT2  
+9. **fixed** unsupported syscall TIME64 FACCESSAT2  
 https://github.com/yuk7/ArchWSL/issues/190  
 https://aur.archlinux.org/cgit/aur.git/tree/glibc-linux4.patch?h=glibc-linux4  
 affects: `glibc`  
