@@ -11,15 +11,15 @@ pkgname=(glibc lib32-glibc glibc-locales)
 pkgver=2.42+r51+gcbf39c26b258
 _commit=cbf39c26b25801e9bc88499b4fd361ac172d4125
 pkgrel=2
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url='https://www.gnu.org/software/libc'
 license=(GPL-2.0-or-later LGPL-2.1-or-later)
 makedepends=(
   gd
   git
-  lib32-gcc-libs
   python
 )
+makedepends_x86_64=(lib32-gcc-libs)
 options=(staticlibs !lto)
 source=(
   "git+https://sourceware.org/git/glibc.git#commit=${_commit}"
@@ -70,6 +70,12 @@ build() {
   # actual builds (support is built-in via --enable-fortify-source).
   CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
 
+  # locale-gen segfaults without this on glibc 2.42
+  if [[ ${CARCH} = "aarch64" ]]; then
+     CFLAGS=${CFLAGS/-fno-plt/}
+     _configure_flags+=(--enable-memory-tagging)
+  fi
+
   (
     cd glibc-build
 
@@ -90,7 +96,7 @@ build() {
     make info
   )
 
-  (
+ if [[ ${CARCH} == x86_64* ]]; then (
     cd lib32-glibc-build
     export CC="gcc -m32 -mstackrealign"
     export CXX="g++ -m32 -mstackrealign"
@@ -112,7 +118,7 @@ build() {
 
     make -O
   )
-
+ fi
   # pregenerate locales here instead of in package
   # functions because localedef does not like fakeroot
   make -C "${srcdir}"/glibc/localedata objdir="${srcdir}"/glibc-build \
@@ -201,6 +207,7 @@ package_lib32-glibc() {
   depends=("glibc=$pkgver")
   options+=('!emptydirs')
   install=lib32-glibc.install
+  arch=(x86_64)
 
   cd lib32-glibc-build
 
