@@ -8,25 +8,31 @@
 
 pkgbase=glibc-wsl
 pkgname=(glibc-wsl)
-pkgver=2.42+r33+gde1fe81f4714
-_commit=de1fe81f471496366580ad728b8986a3424b2fd7
+pkgver=2.42+r50+g453e6b8dbab9
+_commit=453e6b8dbab935257eb0802b0c97bca6b67ba30e
 pkgrel=1
 arch=(x86_64)
 url='https://www.gnu.org/software/libc'
 license=(GPL-2.0-or-later LGPL-2.1-or-later)
-makedepends=(git gd python)
+makedepends=(
+  gd
+  git
+  python
+)
 options=(staticlibs !lto)
-source=("git+https://gitee.com/mirrors/glibc.git#commit=${_commit}"
-        locale.gen.txt
-        locale-gen
-        lib32-glibc.conf
-        sdt.h sdt-config.h
+source=(
+  "git+https://gitee.com/mirrors/glibc.git#commit=${_commit}"
+  locale.gen.txt
+  locale-gen
+  lib32-glibc.conf
+  sdt.h
+  sdt-config.h
 )
 validpgpkeys=(7273542B39962DF7B299931416792B4EA25340F8 # Carlos O'Donell
               BC7C7372637EC10C57D7AA6579C43DFBF1CF2187) # Siddhesh Poyarekar
-b2sums=('cc62922a4587b6913c34600a3783c1771b29bdc2ea341900f63c4cd577e95f0a86a06a145130fce3a961815ee7a17dd13527cfd97cd3337d0ca769d8a8948082'
+b2sums=('928602a264d73562d8337bc14b59fb159b7f5abae7415eb0a2726e541f007d8d52761505093c1654a396aa66ebab65aed0e1c8c1846ffe730666462663fcd096'
         'c859bf2dfd361754c9e3bbd89f10de31f8e81fd95dc67b77d10cb44e23834b096ba3caa65fbc1bd655a8696c6450dfd5a096c476b3abf5c7e125123f97ae1a72'
-        '04fbb3b0b28705f41ccc6c15ed5532faf0105370f22133a2b49867e790df0491f5a1255220ff6ebab91a462f088d0cf299491b3eb8ea53534cb8638a213e46e3'
+        'bdc313a77d7158768b06864fdee6419b25f9eda5b942a394713bf61e289a37993d003c779761be4a70d9febeee2377ba2912f459e879801e3d80f4d0550a2592'
         '7c265e6d36a5c0dff127093580827d15519b6c7205c2e1300e82f0fb5b9dd00b6accb40c56581f18179c4fbbc95bd2bf1b900ace867a83accde0969f7b609f8a'
         'a6a5e2f2a627cc0d13d11a82458cfd0aa75ec1c5a3c7647e5d5a3bb1d4c0770887a3909bfda1236803d5bc9801bfd6251e13483e9adf797e4725332cd0d91a0e'
         '214e995e84b342fe7b2a7704ce011b7c7fc74c2971f98eeb3b4e677b99c860addc0a7d91b8dc0f0b8be7537782ee331999e02ba48f4ccc1c331b60f27d715678')
