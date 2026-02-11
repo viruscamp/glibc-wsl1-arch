@@ -8,10 +8,10 @@
 
 pkgbase=glibc-wsl
 pkgname=(glibc-wsl)
-pkgver=2.42+r51+gcbf39c26b258
-_commit=cbf39c26b25801e9bc88499b4fd361ac172d4125
+pkgver=2.43+r5+g856c426a7534
+_commit=856c426a753450b8c6861a5b994a564f4fc16d4b
 pkgrel=1
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url='https://www.gnu.org/software/libc'
 license=(GPL-2.0-or-later LGPL-2.1-or-later)
 makedepends=(
@@ -19,6 +19,7 @@ makedepends=(
   git
   python
 )
+#makedepends_x86_64=(lib32-gcc-libs)
 options=(staticlibs !lto)
 source=(
   "git+https://gitee.com/mirrors/glibc.git#commit=${_commit}"
@@ -30,7 +31,7 @@ source=(
 )
 validpgpkeys=(7273542B39962DF7B299931416792B4EA25340F8 # Carlos O'Donell
               BC7C7372637EC10C57D7AA6579C43DFBF1CF2187) # Siddhesh Poyarekar
-b2sums=('f394fb9efd1564cbbea60f5f5b023a4431bf4300bcb24f4b39cdaca7b8e87d69eba76a47c4bca5b120a8484ab178c487efcf606e5fe71b29e5352b8849cedb9b'
+b2sums=('97d1704b3b730c966ba202bb769ee21f0688f7a326f90c33756cb94bb32e954bd8ee2ce27dfcc9c4b6cca2221a337195889c21db25005969736c045b3b0c153e'
         'c859bf2dfd361754c9e3bbd89f10de31f8e81fd95dc67b77d10cb44e23834b096ba3caa65fbc1bd655a8696c6450dfd5a096c476b3abf5c7e125123f97ae1a72'
         'bdc313a77d7158768b06864fdee6419b25f9eda5b942a394713bf61e289a37993d003c779761be4a70d9febeee2377ba2912f459e879801e3d80f4d0550a2592'
         '7c265e6d36a5c0dff127093580827d15519b6c7205c2e1300e82f0fb5b9dd00b6accb40c56581f18179c4fbbc95bd2bf1b900ace867a83accde0969f7b609f8a'
@@ -70,6 +71,12 @@ build() {
   # actual builds (support is built-in via --enable-fortify-source).
   CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
 
+  # locale-gen segfaults without this on glibc 2.42
+  if [[ ${CARCH} = "aarch64" ]]; then
+     CFLAGS=${CFLAGS/-fno-plt/}
+     _configure_flags+=(--enable-memory-tagging)
+  fi
+
   (
     cd glibc-build
 
@@ -82,7 +89,6 @@ build() {
         --libdir=/usr/lib \
         --libexecdir=/usr/lib \
         --enable-cet \
-        --enable-sframe \
         "${_configure_flags[@]}"
 
     make -O
@@ -91,8 +97,7 @@ build() {
     make info
   )
 
-if false; then
-  (
+ if [[ ${CARCH} == never_x86_64* ]]; then (
     cd lib32-glibc-build
     export CC="gcc -m32 -mstackrealign"
     export CXX="g++ -m32 -mstackrealign"
@@ -114,8 +119,7 @@ if false; then
 
     make -O
   )
-fi
-
+ fi
   # pregenerate locales here instead of in package
   # functions because localedef does not like fakeroot
   make -C "${srcdir}"/glibc/localedata objdir="${srcdir}"/glibc-build \
@@ -146,6 +150,7 @@ check() (
   _skip_test tst-ntp_gettime         sysdeps/unix/sysv/linux/Makefile
   _skip_test tst-ntp_gettimex        sysdeps/unix/sysv/linux/Makefile
   _skip_test tst-pkey                sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-mseal-pkey          sysdeps/unix/sysv/linux/Makefile
   _skip_test tst-process_mrelease    sysdeps/unix/sysv/linux/Makefile
   _skip_test tst-shstk-legacy-1g     sysdeps/x86_64/Makefile
   _skip_test tst-adjtime             time/Makefile
@@ -206,6 +211,7 @@ package_lib32-glibc() {
   depends=("glibc=$pkgver")
   options+=('!emptydirs')
   install=lib32-glibc.install
+  arch=(x86_64)
 
   cd lib32-glibc-build
 
