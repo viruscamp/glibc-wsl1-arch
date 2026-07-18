@@ -219,12 +219,12 @@ package_glibc() {
   install -Dm644 "${srcdir}"/sdt-config.h "${pkgdir}"/usr/include/sys/sdt-config.h
 
   # Install relevant pre- and post-transaction hooks.
-  install -vDm 644 ../10-glibc-locale-gen.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../10-glibc-remove-locale-archive.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../11-glibc-ldconfig.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../11-glibc-remove-ldconfig-cache.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../12-glibc-iconvconfig.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../12-glibc-remove-iconvconfig-cache.hook -t "$pkgdir"/usr/share/libalpm/hooks/
+  install -vDm 644 ../10-glibc-locale-gen.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../10-glibc-remove-locale-archive.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../11-glibc-ldconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../11-glibc-remove-ldconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-glibc-iconvconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-glibc-remove-iconvconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
 }
 
 package_lib32-glibc() {
@@ -252,8 +252,8 @@ package_lib32-glibc() {
   ln -s ../lib/locale "${pkgdir}"/usr/lib32/locale
 
   # Install relevant pre- and post-transaction hooks.
-  install -vDm 644 ../12-lib32-glibc-iconvconfig.hook -t "$pkgdir"/usr/share/libalpm/hooks/
-  install -vDm 644 ../12-lib32-glibc-remove-iconvconfig-cache.hook -t "$pkgdir"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-lib32-glibc-iconvconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-lib32-glibc-remove-iconvconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
 }
 
 package_glibc-locales() {
