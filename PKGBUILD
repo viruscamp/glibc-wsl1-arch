@@ -8,8 +8,8 @@
 
 pkgbase=glibc-wsl
 pkgname=(glibc-wsl)
-pkgver=2.43+r5+g856c426a7534
-_commit=856c426a753450b8c6861a5b994a564f4fc16d4b
+pkgver=2.44+r50+g1848099f063e
+_commit=1848099f063e99d4ffecbd7667766d54862398b9
 pkgrel=1
 arch=(x86_64 aarch64)
 url='https://www.gnu.org/software/libc'
@@ -19,24 +19,49 @@ makedepends=(
   git
   python
 )
-#makedepends_x86_64=(lib32-gcc-libs)
-options=(staticlibs !lto)
+makedepends_x86_64=(
+  #lib32-gcc-libs
+)
+options=(
+  staticlibs
+  !lto
+)
 source=(
-  "git+https://gitee.com/mirrors/glibc.git#commit=${_commit}"
+  glibc::git+https://forge.sourceware.org/glibc/glibc-mirror#commit=${_commit}
   locale.gen.txt
   locale-gen
   lib32-glibc.conf
   sdt.h
   sdt-config.h
+  tunables.conf
+  shstk.conf
+  10-glibc-locale-gen.hook
+  10-glibc-remove-locale-archive.hook
+  11-glibc-ldconfig.hook
+  11-glibc-remove-ldconfig-cache.hook
+  12-glibc-iconvconfig.hook
+  12-glibc-remove-iconvconfig-cache.hook
+  12-lib32-glibc-iconvconfig.hook
+  12-lib32-glibc-remove-iconvconfig-cache.hook
 )
 validpgpkeys=(7273542B39962DF7B299931416792B4EA25340F8 # Carlos O'Donell
               BC7C7372637EC10C57D7AA6579C43DFBF1CF2187) # Siddhesh Poyarekar
-b2sums=('97d1704b3b730c966ba202bb769ee21f0688f7a326f90c33756cb94bb32e954bd8ee2ce27dfcc9c4b6cca2221a337195889c21db25005969736c045b3b0c153e'
+b2sums=('91eb837659e2ced59a06cff6050d897cc28dc8467e05514db28b0ad6c4dbbe6d0ec0cd77024da016c4e6b0fc2b013fa8cb4d1eb78aab3e0fd44328050a0e6f46'
         'c859bf2dfd361754c9e3bbd89f10de31f8e81fd95dc67b77d10cb44e23834b096ba3caa65fbc1bd655a8696c6450dfd5a096c476b3abf5c7e125123f97ae1a72'
         'bdc313a77d7158768b06864fdee6419b25f9eda5b942a394713bf61e289a37993d003c779761be4a70d9febeee2377ba2912f459e879801e3d80f4d0550a2592'
         '7c265e6d36a5c0dff127093580827d15519b6c7205c2e1300e82f0fb5b9dd00b6accb40c56581f18179c4fbbc95bd2bf1b900ace867a83accde0969f7b609f8a'
         'a6a5e2f2a627cc0d13d11a82458cfd0aa75ec1c5a3c7647e5d5a3bb1d4c0770887a3909bfda1236803d5bc9801bfd6251e13483e9adf797e4725332cd0d91a0e'
-        '214e995e84b342fe7b2a7704ce011b7c7fc74c2971f98eeb3b4e677b99c860addc0a7d91b8dc0f0b8be7537782ee331999e02ba48f4ccc1c331b60f27d715678')
+        '214e995e84b342fe7b2a7704ce011b7c7fc74c2971f98eeb3b4e677b99c860addc0a7d91b8dc0f0b8be7537782ee331999e02ba48f4ccc1c331b60f27d715678'
+        '315cf92976714d88c60d23a3114e172f26ade1c1461bd2939b6842b03cd76ec63a3c867af5eab56f8c61d3f011158d69194ef1495e28ac47fd60b9f8bd76673c'
+        '9725f12fce07b9f5bc413c6d8a3fa7887d4531e499bb0d56588791be74219ae978b60688ad61a7ffca1d4915ba191cd98ddaaa8931f7c72176086de6d4b50948'
+        '88b36b26d8ee8ac0d2034106d3ba9595296e6d474d5b892f165701865ff790515f979693897b6c23bb421e7e091b3e7367ec1065a7e9dbaab3b0546e1b037009'
+        '9aea685518e63377b745c83ce51c36434f2a3c181440d108ecad915ec6162087302710c1bd95a1097af4ad66468a7fae485881fb030bc2dd886882864b36bdfe'
+        'a5884949727babde41941ba276b696f2f473fb4936ade4da7f7f376cddd1ba189efc1b24fa5b8f4861d3988c3e22404ba5806fa8b67437635eaa73df0c0dc13c'
+        'c18f52b188ecde915a0d3b69fd87391fdf4a8800a3cd5332456f3009d5c1161944d7ab10a7f2a68fb0b035b69ae1576cb80c1a81ce94ae410066ad19f3d5c196'
+        '8537d5d673e73c3656c474ad46d30fce23a317ee6758e304875e3099f1a2250da8a7fb358fb1785dfde704d06c5ab7cdf18e213f7906cdcafa586d3d7b60d085'
+        '55ca66ad10e5e8ecb7f205acd009a3ca945c27894047e1ace20866a14d5dd9f2b97e23e6da678877363c2963a6fc2ef83030b4f5de6d7bf84da88bd7434c5596'
+        'a6fa4b559b4b701b8fcee294d0a30371de233ba5cb3a08f915b9aa9be42e08e70814a71f74b9e87e8936a847b621fac0b282e8260ea3d728a26ce879953ff17f'
+        '8836f747a59cab143679eb751bc67f79b2bd1057f2108a984e63905b8404caeeec5f2e01bfbb42e83e1c7d24e2b10731a9abab4b8b472588e9196c1d519ac3e2')
 
 pkgver() {
   cd glibc
@@ -71,10 +96,9 @@ build() {
   # actual builds (support is built-in via --enable-fortify-source).
   CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
 
-  # locale-gen segfaults without this on glibc 2.42
+  # ldconfig segfaults without this on glibc 2.44
   if [[ ${CARCH} = "aarch64" ]]; then
      CFLAGS=${CFLAGS/-fno-plt/}
-     _configure_flags+=(--enable-memory-tagging)
   fi
 
   (
@@ -89,6 +113,7 @@ build() {
         --libdir=/usr/lib \
         --libexecdir=/usr/lib \
         --enable-cet \
+        --enable-sframe \
         "${_configure_flags[@]}"
 
     make -O
@@ -145,15 +170,18 @@ check() (
   # The following tests fail due to restrictions in the Arch build system
   # The correct fix is to add the following to the systemd-nspawn call:
   # --system-call-filter="@clock @memlock @pkey"
-  _skip_test test-errno-linux        sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-mlock2              sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-ntp_gettime         sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-ntp_gettimex        sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-pkey                sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-mseal-pkey          sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-process_mrelease    sysdeps/unix/sysv/linux/Makefile
-  _skip_test tst-shstk-legacy-1g     sysdeps/x86_64/Makefile
-  _skip_test tst-adjtime             time/Makefile
+  _skip_test tst-ldconfig-cache             elf/Makefile
+  _skip_test tst-pthread-gdb-attach         nptl/Makefile
+  _skip_test tst-pthread-gdb-attach-static  nptl/Makefile
+  _skip_test test-errno-linux               sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-mlock2                     sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-ntp_gettime                sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-ntp_gettimex               sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-pkey                       sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-mseal-pkey                 sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-process_mrelease           sysdeps/unix/sysv/linux/Makefile
+  _skip_test tst-shstk-legacy-1g            sysdeps/x86_64/Makefile
+  _skip_test tst-adjtime                    time/Makefile
 
   make -O check
 )
@@ -161,13 +189,18 @@ check() (
 package_glibc-wsl() {
   pkgdesc='GNU C Library for WSL1'
   depends=('linux-api-headers>=4.10' tzdata filesystem)
-  optdepends=('gd: for memusagestat'
-              'perl: for mtrace')
+  optdepends=(
+    'gd: for memusagestat'
+    'perl: for mtrace'
+  )
   provides=("glibc=${pkgver%%.r*}")
   conflicts=("glibc")
-  install=glibc.install
-  backup=(etc/gai.conf
-          etc/locale.gen)
+  backup=(
+    etc/gai.conf
+    etc/locale.gen
+    etc/tunables.conf
+    etc/tunables.conf.d/shstk.conf
+  )
 
   make -C glibc-build DESTDIR="${pkgdir}" install
   rm -f "${pkgdir}"/etc/ld.so.cache
@@ -204,13 +237,24 @@ package_glibc-wsl() {
   # libraries too. Useful for gdb's catch command.
   install -Dm644 "${srcdir}"/sdt.h "${pkgdir}"/usr/include/sys/sdt.h
   install -Dm644 "${srcdir}"/sdt-config.h "${pkgdir}"/usr/include/sys/sdt-config.h
+
+  # Install relevant pre- and post-transaction hooks.
+  install -vDm 644 ../10-glibc-locale-gen.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../10-glibc-remove-locale-archive.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../11-glibc-ldconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../11-glibc-remove-ldconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-glibc-iconvconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-glibc-remove-iconvconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+
+  # Install tunables.conf
+  install -vDm 644 ../tunables.conf -t "${pkgdir}"/etc/
+  install -vDm 644 ../shstk.conf -t "${pkgdir}"/etc/tunables.conf.d/
 }
 
 package_lib32-glibc() {
   pkgdesc='GNU C Library (32-bit)'
   depends=("glibc=$pkgver")
   options+=('!emptydirs')
-  install=lib32-glibc.install
   arch=(x86_64)
 
   cd lib32-glibc-build
@@ -230,6 +274,10 @@ package_lib32-glibc() {
 
   # Symlink /usr/lib32/locale to /usr/lib/locale
   ln -s ../lib/locale "${pkgdir}"/usr/lib32/locale
+
+  # Install relevant pre- and post-transaction hooks.
+  install -vDm 644 ../12-lib32-glibc-iconvconfig.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+  install -vDm 644 ../12-lib32-glibc-remove-iconvconfig-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
 }
 
 package_glibc-locales() {
